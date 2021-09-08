@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Comment {
+  id      Int       @id @default(autoincrement())
+  domain  String
+  path    String
+  content String
+  ctime   DateTime?
+
+  issuer String
+  issuer_website String
+  issuer_email String
+
+  replies Reply[]
+
+  @@index([domain, path])
+  @@map("comment")
+}
+
+model Reply {
+  id      Int       @id @default(autoincrement())
+  rid     Int
+  content String
+  ctime   DateTime?
+
+  issuer String
+  issuer_website String
+  issuer_email String
+
+  cid     Int
+  comment Comment? @relation(fields: [cid], references: [id])
+
+  @@index([cid, rid])
+  @@map("reply")
+}
