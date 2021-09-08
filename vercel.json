@@ -9,7 +9,7 @@
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "localhost:3000, ovo.js.org, xjj.pub"
+          "value": "*"
         },
         {
           "key": "Access-Control-Allow-Methods",
