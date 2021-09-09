@@ -48,16 +48,24 @@ export default async function (req: VercelRequest, res: VercelResponse) {
           orderBy: {id: "desc"}
         })
       } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send(e.message)
+        return
       }
 
-      const maps = new Map<Number, Reply[]>()
-      replies.forEach(v => {
-        if (!maps.has(v.cid)) maps.set(v.cid, [])
-        maps.get(v.cid).push(v)
-      })
+      if (replies) {
+        const maps = new Map<Number, Reply[]>()
+        replies.forEach(v => {
+          if (!maps.has(v.cid)) maps.set(v.cid, [])
+          maps.get(v.cid).push(v)
 
-      comments.forEach(v => v.replies = maps.get(v.id))
+          v.issuer_email = ""
+        })
+  
+        comments.forEach(v => {
+          v.replies = maps.get(v.id)
+          v.issuer_email = ""
+        })
+      }
 
       res.json({
         comments,
@@ -80,6 +88,10 @@ export default async function (req: VercelRequest, res: VercelResponse) {
       }
 
       res.json(comment)
+    }; break
+    // for CORS
+    case "OPTIONS": {
+      res.status(200).end()
     }; break
   }
 };

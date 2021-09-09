@@ -23,5 +23,9 @@ export default async function (req: VercelRequest, res: VercelResponse) {
 
       res.json(reply)
     }; break
+    // for CORS
+    case "OPTIONS": {
+      res.status(200).end()
+    }; break
   }
 }
